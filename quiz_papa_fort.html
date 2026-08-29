@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Es-tu le Papa Fort dont tes enfants ont besoin ?</title>
+<style>
+  /* ============================================================
+     CONFIGURATION — à modifier avant mise en ligne
+     ============================================================ */
+  /* Voir la constante SYSTEME_IO_OPTIN_URL tout en bas du fichier,
+     dans la balise <script>. C'est la SEULE ligne à changer pour
+     brancher ce quiz sur ta page de capture Systeme.io. */
+
+  :root {
+    --navy: #1F2937;
+    --orange: #C2540A;
+    --orange-light: #FDE9D9;
+    --grey: #6B7280;
+    --light: #F3F4F6;
+    --white: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--light);
+    color: var(--navy);
+    display: flex;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+  .card {
+    background: var(--white);
+    max-width: 560px;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 32px 28px;
+    text-align: center;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--orange-light);
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: 26px;
+    line-height: 1.3;
+    margin: 0 0 12px;
+  }
+  .subtitle {
+    color: var(--grey);
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0 0 24px;
+  }
+  .photo-placeholder {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .photo-placeholder svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .btn {
+    display: inline-block;
+    width: 100%;
+    background: var(--orange);
+    color: var(--white);
+    font-size: 17px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .btn:hover { opacity: 0.9; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .reassurance {
+    color: var(--grey);
+    font-size: 13px;
+    font-style: italic;
+    margin-top: 12px;
+  }
+  .progress-wrap {
+    background: var(--light);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .progress-bar {
+    height: 100%;
+    background: var(--orange);
+    border-radius: 999px;
+    transition: width 0.25s ease;
+    width: 0%;
+  }
+  .q-counter {
+    color: var(--grey);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+  .q-text {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-bottom: 22px;
+    text-align: left;
+  }
+  .option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--light);
+    border: 1.5px solid transparent;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: var(--navy);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .option:hover {
+    border-color: var(--orange);
+    background: var(--orange-light);
+  }
+  section { display: none; }
+  section.active { display: block; }
+  .spinner-text {
+    color: var(--grey);
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- ===================== ÉCRAN 1 : LANDING (pas d'email demandé ici) ===================== -->
+  <section id="landing" class="active">
+    <div class="badge">Diagnostic gratuit — 2 minutes</div>
+    <!-- Illustration temporaire : remplace ce bloc <div class="photo-placeholder">...</div>
+         par une vraie photo (<img src="ta-photo.jpg" alt="..."> ) dès que tu en as une. -->
+    <div class="photo-placeholder">
+      <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E8783C"/>
+            <stop offset="100%" stop-color="#FDECD8"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="400" height="180" fill="url(#sky)"/>
+        <circle cx="322" cy="46" r="26" fill="#FBBF77" opacity="0.85"/>
+        <rect x="0" y="158" width="400" height="22" fill="#7C5A44"/>
+        <!-- Papa : silhouette de dos, bébé porté sur le dos -->
+        <g fill="#1F2937">
+          <path d="M214,150 L207,178 L219,178 L224,150 Z"/>
+          <path d="M228,150 L236,178 L248,178 L238,150 Z"/>
+          <path d="M200,92 C200,80 210,71 223,71 L241,71 C253,71 262,80 262,92 L259,150 L203,150 Z"/>
+          <circle cx="231" cy="56" r="17"/>
+          <ellipse cx="259" cy="104" rx="14" ry="19"/>
+          <circle cx="260" cy="82" r="8"/>
+        </g>
+        <!-- Enfant de 4 ans, main dans la main -->
+        <g fill="#1F2937">
+          <path d="M160,158 L156,178 L165,178 L169,158 Z"/>
+          <path d="M172,158 L177,178 L186,178 L182,158 Z"/>
+          <path d="M153,121 C153,113 159,107 167,107 L177,107 C185,107 191,113 191,121 L189,158 L155,158 Z"/>
+          <circle cx="171" cy="98" r="12"/>
+          <path d="M188,132 C196,136 202,138 206,140" stroke="#1F2937" stroke-width="7" stroke-linecap="round" fill="none"/>
+        </g>
+      </svg>
+    </div>
+    <h1>Es-tu le Papa Fort dont tes enfants ont besoin ?</h1>
+    <p class="subtitle">Découvre en 2 minutes ton profil physique de papa — et ce qu'il faut changer avant qu'il ne soit trop tard.</p>
+    <button class="btn" onclick="startQuiz()">Je fais le test (2 min)</button>
+    <p class="reassurance">100% gratuit. Résultat immédiat.</p>
+  </section>
+
+  <!-- ===================== ÉCRAN 2 : QUIZ (8 questions, toujours pas d'email) ===================== -->
+  <section id="quiz">
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="q-counter" id="qCounter">Question 1 / 8</div>
+    <div class="q-text" id="qText"></div>
+    <div id="options"></div>
+  </section>
+
+  <!-- ===================== ÉCRAN 3 : TRANSITION avant redirection vers Systeme.io ===================== -->
+  <section id="redirecting">
+    <div class="badge">Ton profil est prêt</div>
+    <h1>On y est presque !</h1>
+    <p class="subtitle spinner-text">Redirection vers la page pour recevoir ton résultat par email...</p>
+  </section>
+
+</div>
+
+<script>
+  /* ============================================================
+     QUESTIONS ET BARÈME (8 questions x 0-3 points = 24 points max)
+     ============================================================ */
+  const questions = [
+    {
+      text: "Peux-tu courir 2 km sans t'essouffler fortement ?",
+      options: [
+        "Pas du tout, je m'essouffle très vite",
+        "Difficilement, je dois ralentir souvent",
+        "Oui, avec un peu d'effort",
+        "Oui, facilement"
+      ]
+    },
+    {
+      text: "Peux-tu porter tes enfants sans douleur au dos ?",
+      options: [
+        "Non, j'ai mal rapidement",
+        "Un peu, mais pas longtemps",
+        "Oui, sans trop de problème",
+        "Oui, aucun souci"
+      ]
+    },
+    {
+      text: "Depuis combien de temps n'as-tu pas fait une vraie séance de sport ?",
+      options: [
+        "Plus de 6 mois",
+        "2 à 6 mois",
+        "Moins de 2 mois",
+        "Je m'entraîne régulièrement"
+      ]
+    },
+    {
+      text: "Comment est ton niveau d'énergie en fin de journée, avec les enfants ?",
+      options: [
+        "Épuisé, je n'ai plus rien à donner",
+        "Fatigué, je tiens le coup",
+        "Correct, je gère",
+        "Plein d'énergie"
+      ]
+    },
+    {
+      text: "Es-tu à l'aise avec ton reflet dans le miroir ?",
+      options: [
+        "Pas du tout",
+        "Pas vraiment",
+        "Plutôt oui",
+        "Oui, complètement"
+      ]
+    },
+    {
+      text: "Si un imprévu physique survenait (rattraper un enfant qui court vers la route), te sens-tu prêt ?",
+      options: [
+        "Pas confiant du tout",
+        "J'ai un doute",
+        "Plutôt confiant",
+        "Totalement confiant"
+      ]
+    },
+    {
+      text: "Combien d'heures dors-tu en moyenne ?",
+      options: [
+        "Moins de 5h",
+        "5 à 6h",
+        "6 à 7h",
+        "7h ou plus"
+      ]
+    },
+    {
+      text: "Sur 10, quelle est ta confiance en ta forme physique actuelle ?",
+      options: [
+        "Entre 0 et 3",
+        "Entre 4 et 5",
+        "Entre 6 et 7",
+        "Entre 8 et 10"
+      ]
+    },
+    {
+      text: "Peux-tu t'accroupir ou jouer par terre avec ton enfant sans douleur ni raideur ?",
+      options: [
+        "Non, je ne peux quasiment pas m'accroupir",
+        "Difficilement, je suis raide après quelques minutes",
+        "Oui, mais je sens une gêne",
+        "Oui, sans aucun problème"
+      ]
+    },
+    {
+      text: "Dans 10 ans, te sens-tu capable de suivre le rythme de ton enfant (vélo, foot, courses) ?",
+      options: [
+        "Pas du tout, ça m'inquiète",
+        "J'ai un doute sérieux",
+        "Plutôt oui, avec un peu d'entretien",
+        "Oui, certain, si je continue comme ça"
+      ]
+    }
+  ];
+
+  let currentIndex = 0;
+  let totalScore = 0;
+
+  function startQuiz() {
+    show('quiz');
+    renderQuestion();
+  }
+
+  function show(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function renderQuestion() {
+    const q = questions[currentIndex];
+    document.getElementById('qCounter').textContent = `Question ${currentIndex + 1} / ${questions.length}`;
+    document.getElementById('qText').textContent = q.text;
+    document.getElementById('progressBar').style.width = `${(currentIndex / questions.length) * 100}%`;
+
+    const optionsEl = document.getElementById('options');
+    optionsEl.innerHTML = '';
+    q.options.forEach((optionText, points) => {
+      const btn = document.createElement('button');
+      btn.className = 'option';
+      btn.textContent = optionText;
+      btn.onclick = () => answer(points);
+      optionsEl.appendChild(btn);
+    });
+  }
+
+  function answer(points) {
+    totalScore += points;
+    currentIndex++;
+    if (currentIndex < questions.length) {
+      renderQuestion();
+    } else {
+      document.getElementById('progressBar').style.width = '100%';
+      finishQuiz();
+    }
+  }
+
+  function finishQuiz() {
+    const maxScore = questions.length * 3; // 30 avec 10 questions
+    const percentage = Math.round((totalScore / maxScore) * 100);
+
+    let profil;
+    if (percentage <= 33) profil = 'fantome';
+    else if (percentage <= 66) profil = 'reconstruction';
+    else profil = 'fort';
+
+    show('redirecting');
+
+    // ============================================================
+    // BRANCHEMENT SYSTEME.IO — LA SEULE LIGNE À MODIFIER
+    // Remplace l'URL ci-dessous par celle de TA page de capture
+    // Systeme.io (l'écran qui demande prénom + email).
+    // Le profil et le score partent en paramètres d'URL pour être
+    // récupérés sur ta page de remerciement (voir le fichier
+    // resultat_systemeio_snippet.html fourni à côté).
+    // ============================================================
+    const SYSTEME_IO_OPTIN_URL = "https://TON-SOUS-DOMAINE.systeme.io/inscription-papa-fort";
+
+    const destination = `${SYSTEME_IO_OPTIN_URL}?profil=${profil}&score=${percentage}`;
+
+    setTimeout(() => {
+      window.location.href = destination;
+    }, 1200);
+  }
+</script>
+
+</body>
+</html>
